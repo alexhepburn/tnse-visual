@@ -3,17 +3,12 @@ import numpy as np
 from sklearn.manifold import TSNE
 from bokeh.models import (LassoSelectTool, PanTool,
                           ResetTool,
-                          HoverTool, WheelZoomTool)
+                          HoverTool, WheelZoomTool, ColumnDataSource)
 TOOLS = [LassoSelectTool, PanTool, WheelZoomTool, ResetTool]
 from bokeh.plotting import figure, output_file, show
-from bokeh.models import ColumnDataSource
-from matplotlib import cm
 import os
-import scipy
-from skimage import io, filters, measure, morphology, img_as_ubyte
 import pandas as pd
 import base64
-from io import BytesIO
 
 '''
 dirs       = Array of directorys for classes to plot
