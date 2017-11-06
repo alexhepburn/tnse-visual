@@ -5,4 +5,4 @@ Uses Bokeh with a custom HTML hover command so that images are shown when you ho
 
 Features used in the t-SNE command are activations from a neural network that generated the shown images.
 
-To view the example image go to : [Examle](https://cdn.rawgit.com/alexhepburn/tnse-visual/c4abfa19/tsneBokeh.html)
+To view the example image go to : [Examle](https://cdn.rawgit.com/alexhepburn/tnse-visual/6774fcd0/tsneBokeh.html)
