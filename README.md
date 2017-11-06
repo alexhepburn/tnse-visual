@@ -1,2 +1,4 @@
 # tnse-visual
-TSNE visualisation where you can view images corresponding to scatter points by hovering over them
+t-SNE visualisation where you can view images corresponding to scatter points by hovering over them.
+Uses Bokeh with a custom HTML hover command so that images are shown when you hover over a scatter point.
+Features used in the t-SNE command are activations from a neural network that generated the shown images.
