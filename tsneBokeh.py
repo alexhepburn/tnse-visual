@@ -6,6 +6,7 @@ from bokeh.models import (LassoSelectTool, PanTool,
                           HoverTool, WheelZoomTool, ColumnDataSource)
 TOOLS = [LassoSelectTool, PanTool, WheelZoomTool, ResetTool]
 from bokeh.plotting import figure, output_file, show
+from bokeh.palettes import Spectral6
 import os
 import pandas as pd
 import base64
@@ -14,6 +15,15 @@ import base64
 dirs       = Array of directorys for classes to plot
 nPerClass  = Number of images to be used from each class (2 classes)
 activFiles = Array of pickle files containing network activations
+'''
+
+'''
+Genres defined as:
+jazz  = 0
+dance = 1
+rock  = 2
+rap   = 3
+metal = 4
 '''
 
 tooltip = """
@@ -42,10 +52,11 @@ class tsneBokeh:
         self.dics = []
         self.activs = []
         self.URIs = []
-        self.nClass = len(dirs)
+        self.genres = []
+        self.nClass = len(labels)
         self.tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=500)
         output_file("tsnebokeh.html")
-        self.colors = ['navy', 'firebrick']
+        self.colors = Spectral6
         self.getActivations()
         self.getURIs()
 
@@ -55,8 +66,11 @@ class tsneBokeh:
                 self.dics.append(pickle.load(open(p, "rb")))
             for d in self.dics:
                 activs = d["activs"][0:self.n]
+                genres = (d["genres"][0:self.n])
                 for a in activs:
                     self.activs.append(a)
+                for g in genres:
+                    self.genres.append(g)
         except Exception as e:
             print(e)
 
@@ -75,35 +89,59 @@ class tsneBokeh:
             self.URIs.append(uri)
 
     def createPlot(self):
-        activations = []
-        dataFrames = []
-        sources = []
         res = self.tsne.fit_transform(self.activs)
-        for i in range(0, self.nClass):
-            df = pd.DataFrame()
-            if i == 0:
-                df["x-tsne"] = res[0:self.n, 0]
-                df["y-tsne"] = res[0:self.n, 1]
-            elif i == 1:
-                df["x-tsne"] = res[self.n:, 0]
-                df["y-tsne"] = res[self.n:, 1]
-            print(len(self.URIs))
-            df["image_files"] = self.URIs[i]
-            df['color'] = self.colors[i]
-            df['label'] = self.labels[i]
-            sources.append(ColumnDataSource(df))
-            dataFrames.append(df)
         hover = HoverTool(tooltips=self.tooltip)
         tools = [t() for t in TOOLS] + [hover]
-        p=figure(plot_width=800, plot_height=800, title=None, toolbar_location="below", tools=tools)
-        for s in sources:
-            p.circle('x-tsne', 'y-tsne', size=10, color='color', legend='label', source=s)
+        p=figure(plot_width=1200, plot_height=800, title=None,
+                 toolbar_location="below", tools=tools)
+
+        # Count through each genre for both real and generated to find the
+        # right data points to plot in different colours
+        for j in range(0, 2):
+            for i in range(0, int(self.nClass/2)):
+                df = pd.DataFrame()
+                # If generated need first half of the list of activation values
+                if j == 0:
+                    gen = self.genres[0:self.n]
+                    ind = [ix for ix, value in enumerate(gen) if value == i]
+                    df["x-tsne"] = res[0:self.n, 0][ind]
+                    df["y-tsne"] = res[0:self.n, 1][ind]
+                # If real need second half of the list of activation values
+                elif j == 1:
+                    gen = self.genres[self.n:]
+                    ind = [ix for ix, value in enumerate(gen) if value == i]
+                    df["x-tsne"] = res[self.n:, 0][ind]
+                    df["y-tsne"] = res[self.n:, 1][ind]
+                df["image_files"] = [self.URIs[j][k] for k in ind]
+                df['color'] = self.colors[i]
+                df['label'] = self.labels[i*(1+j)]
+                if j == 0:
+                    p.cross('x-tsne', 'y-tsne', size=8, color='color',
+                             legend='label', source=ColumnDataSource(df))
+                elif j == 1:
+                    p.circle('x-tsne', 'y-tsne', size=8, color='color',
+                             legend='label', source=ColumnDataSource(df))
+        #for i in range(0, self.nClass):
+            #df = pd.DataFrame()
+            #if i == 0:
+            #    df["x-tsne"] = res[0:self.n, 0]
+            #    df["y-tsne"] = res[0:self.n, 1]
+            #elif i == 1:
+            #    df["x-tsne"] = res[self.n:, 0]
+            #    df["y-tsne"] = res[self.n:, 1]
+            #df["image_files"] = self.URIs[i]
+            #df['color'] = self.colors[i]
+            #df['label'] = self.labels[i]
+            #sources.append(ColumnDataSource(df))
+            #dataFrames.append(df)
         show(p)
 
 
 if __name__ == '__main__':
-    files = ["gen_activ.p", "real_activ.p"]
+    files = ["gen_activ2.p", "real_activ.p"]
     dirs = ["./generated", "./real"]
-    labels = ["Generated", "Real"]
+    labels = ["Generated Jazz, Generated Dance, Generated Rock",  \
+              "Generated Rap", "Generated Metal", "Real Jazz", "Real Dance", \
+              "Real Rock", "Real Rap", "Real Metal"]
     tsb = tsneBokeh(dirs, 1000, files, labels)
     tsb.createPlot()
