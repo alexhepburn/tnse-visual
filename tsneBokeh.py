@@ -121,26 +121,13 @@ class tsneBokeh:
                 elif j == 1:
                     p.circle('x-tsne', 'y-tsne', size=8, color='color',
                              legend='label', source=ColumnDataSource(df))
-        #for i in range(0, self.nClass):
-            #df = pd.DataFrame()
-            #if i == 0:
-            #    df["x-tsne"] = res[0:self.n, 0]
-            #    df["y-tsne"] = res[0:self.n, 1]
-            #elif i == 1:
-            #    df["x-tsne"] = res[self.n:, 0]
-            #    df["y-tsne"] = res[self.n:, 1]
-            #df["image_files"] = self.URIs[i]
-            #df['color'] = self.colors[i]
-            #df['label'] = self.labels[i]
-            #sources.append(ColumnDataSource(df))
-            #dataFrames.append(df)
         show(p)
 
 
 if __name__ == '__main__':
     files = ["gen_activ2.p", "real_activ.p"]
     dirs = ["./generated", "./real"]
-    labels = ["Generated Jazz, Generated Dance, Generated Rock",  \
+    labels = ["Generated Jazz", "Generated Dance", "Generated Rock",  \
               "Generated Rap", "Generated Metal", "Real Jazz", "Real Dance", \
               "Real Rock", "Real Rap", "Real Metal"]
     tsb = tsneBokeh(dirs, 1000, files, labels)
