@@ -7,6 +7,6 @@ Features used in the t-SNE command are activations from a neural network that ge
 
 To view the HTML files please go to : 
 
-[Unlabelled Genereated and Real Images](https://cdn.rawgit.com/alexhepburn/tnse-visual/6774fcd0/tsneBokeh.html)
+[Unlabelled Generated and Real Images](https://cdn.rawgit.com/alexhepburn/tnse-visual/6774fcd0/tsneBokeh.html)
 
 [Genre labelled Generated and Real Images](https://cdn.rawgit.com/alexhepburn/tnse-visual/4745b7aa/tsnebokehGenres.html)
