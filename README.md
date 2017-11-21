@@ -10,3 +10,5 @@ To view the HTML files please go to :
 [Unlabelled Generated and Real Images](https://cdn.rawgit.com/alexhepburn/tnse-visual/6774fcd0/tsneBokeh.html)
 
 [Genre labelled Generated and Real Images](https://cdn.rawgit.com/alexhepburn/tnse-visual/4745b7aa/tsnebokehGenres.html)
+
+[Genre labelled Real Images](https://cdn.rawgit.com/alexhepburn/tnse-visual/7c5a458b/tsnebokehrealonly.html)
